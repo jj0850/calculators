@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>No Stack Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #fafafa;
+    }
+    h2 {
+      margin-bottom: 15px;
+    }
+    table {
+      border-collapse: collapse;
+      margin: 0; /* Align left */
+      background: #fff;
+    }
+    th, td {
+      border: 1px solid #d0d0d0;
+      padding: 8px 12px;
+      text-align: right;
+      min-width: 120px;
+    }
+    th {
+      background: #f3f3f3;
+      font-weight: bold;
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      border: none;
+      text-align: right;
+      font-size: 14px;
+      background: #fefefe;
+    }
+    input:focus {
+      outline: 1px solid #4a90e2;
+    }
+    .header {
+      background: #e8f0fe;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>No Stack Calculator</h2>
+  <table>
+    <tr>
+      <td class="header" colspan="2">Loan Details</td>
+    </tr>
+    <tr>
+      <td>Principal</td>
+      <td><input type="number" id="c4" step="0.01"></td>
+    </tr>
+    <tr>
+      <td>Factor Rate</td>
+      <td><input type="number" id="c5" step="0.01"></td>
+    </tr>
+    <tr>
+      <td>Term</td>
+      <td><input type="number" id="c7" step="0.01"></td>
+    </tr>
+    <tr><td>Repayment Amount</td><td id="c6"></td></tr>
+    <tr><td>Daily/Weekly Repayments</td><td id="c8"></td></tr>
+    <tr>
+      <td class="header" colspan="2">No Stack Values</td>
+    </tr>
+    <tr><td>Principal</td><td id="f4"></td></tr>
+    <tr><td>Factor Rate</td><td id="f5"></td></tr>
+    <tr><td>Term</td><td id="f7"></td></tr>
+    <tr><td>Repayment Amount</td><td id="f6"></td></tr>
+    <tr><td>Daily/Weekly Repayments</td><td id="f8"></td></tr>
+  </table>
+
+  <script>
+    const currencyFormatter = new Intl.NumberFormat("en-AU", {
+      style: "currency",
+      currency: "AUD",
+      minimumFractionDigits: 2
+    });
+
+    function roundUp(value, step) {
+      return Math.ceil(value / step) * step;
+    }
+
+    function calculate() {
+      const c4 = parseFloat(document.getElementById("c4").value) || 0;
+      const c5 = parseFloat(document.getElementById("c5").value) || 0;
+      const c7 = parseFloat(document.getElementById("c7").value) || 0;
+
+      const c6 = c4 * c5;
+      const c8 = c7 !== 0 ? roundUp(c6 / c7, 0.05) : 0;
+
+      const f4 = c4;
+      const f5 = c5 + 0.15;
+      const f7 = roundUp(c7 * 0.8, 5);
+      const f6 = f4 * f5;
+      const f8 = f7 !== 0 ? roundUp(f6 / f7, 0.05) : 0;
+
+      // Format outputs
+      document.getElementById("c6").innerText = currencyFormatter.format(c6);
+      document.getElementById("c8").innerText = currencyFormatter.format(c8);
+
+      document.getElementById("f4").innerText = currencyFormatter.format(f4);
+      document.getElementById("f5").innerText = f5.toFixed(2);
+      document.getElementById("f6").innerText = currencyFormatter.format(f6);
+      document.getElementById("f7").innerText = f7.toFixed(0); // whole number only
+      document.getElementById("f8").innerText = currencyFormatter.format(f8);
+    }
+
+    document.querySelectorAll("input").forEach(input => {
+      input.addEventListener("input", calculate);
+    });
+  </script>
+</body>
+</html>
